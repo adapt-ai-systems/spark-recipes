@@ -18,7 +18,7 @@ See `launch.sh` and `launch.env.example`. Required `HEAD_IP`, three ordered `RAN
 
 ## Measured evidence
 
-2026-09-27 same-session fastbench, temperature 0, 512 output tokens: before D3 g9r 8K 2.99 s, 32K 11.13 s, prose 49.5 tok/s, code 64.1; D3 confirmation after reboot 8K 3.03 s (2,140 tok/s), 32K 11.49 s (2,112 tok/s), prose 54.8, code 70.9. The 3,642,578-token KV pool was observed on g9r, not remeasured after D3. Normalized decoding rounds/s improved 8.1% prose and 8.3% code. Tool call, strict JSON and three needles near 85K passed. 64K prefill was 21.77 s vs 21.16 s before, so prefill is not improved. Warm boot with runai was 187–200 s, versus a recorded 13m22s cold baseline on an older container; that comparison includes different profiles.
+2026-09-27 same-session fastbench, temperature 0, 512 output tokens: before D3 g9r ~6.5K input tokens in 2.99 s, ~24.3K in 11.13 s, prose 49.5 tok/s, code 64.1; D3 confirmation after reboot ~6.5K in 3.03 s (2,140 tok/s), ~24.3K in 11.49 s (2,112 tok/s), prose 54.8, code 70.9. The confirmation summary records 6,485 and 24,277 prompt tokens respectively; the fastbench's 8K/32K size settings specify approximate input text length, not measured token counts. The 3,642,578-token KV pool was observed on g9r, not remeasured after D3. Normalized decoding rounds/s improved 8.1% prose and 8.3% code. Tool call, strict JSON and three needles near 85K passed. ~47.4K-token prefill was 21.77 s vs 21.16 s before, so prefill is not improved. Warm boot with runai was 187–200 s, versus a recorded 13m22s cold baseline on an older container; that comparison includes different profiles.
 
 ## Rollback
 

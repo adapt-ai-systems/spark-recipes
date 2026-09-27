@@ -18,7 +18,7 @@ Track key: `qwen-flash` (controller record: `pipeline/tracks/qwen-flash.yaml`).
 
 ## Measured evidence
 
-2026-09-27 local fastbench: boot-v3 baseline 8K/32K prefill proxies 3107/3144 tok/s, prose/code 46.4/83.7 tok/s. Final TF+D3+B1: 3106/3131 prefill, 60.8/99.1 decode. Step probe repeated 74.1/75.6/73.4 tok/s; quality checks passed, but teacher-forced NLL 2.261 versus reference 2.235–2.256 indicates small lossy drift. Four/sixteen/thirty-two-way concurrency smoke: 192/261/286 aggregate tok/s. These are mixed protocol-specific measures, not a generalized speed ranking.
+2026-09-27 local fastbench: boot-v3 baseline ~6.9K/~26.2K-token prefill proxies 3107/3144 tok/s, prose/code 46.4/83.7 tok/s. Final TF+D3+B1: 3106/3131 tok/s prefill on ~6.9K/~26.2K inputs (6,923/26,200 prompt tokens in the summary), 60.8/99.1 tok/s decode. The fastbench's 8K/32K size settings specify approximate input text length, not measured token counts. Step probe repeated 74.1/75.6/73.4 tok/s; quality checks passed, but teacher-forced NLL 2.261 versus reference 2.235–2.256 indicates small lossy drift. Four/sixteen/thirty-two-way concurrency smoke: 192/261/286 aggregate tok/s. These are mixed protocol-specific measures, not a generalized speed ranking.
 
 ## Rollback
 

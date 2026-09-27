@@ -8,7 +8,7 @@ Track key: `ds41-flash` (controller record: `pipeline/tracks/ds41-flash.yaml`).
 
 - Upstream runtime/recipe: [knapcio/DeepSeek-V4.1-Flash-4x-DGX-Spark-TP4](https://github.com/knapcio/DeepSeek-V4.1-Flash-4x-DGX-Spark-TP4) at `7ac7123` (MiaAI-Lab TP4 production lineage). The locally measured container was built from the pinned upstream recipe; its immutable image digest is **not recorded** in the local summary.
 - Weights: DeepSeek V4.1 Flash checkpoint shared from head to workers; separate Engram on every rank. Weight repository revision and manifest are **not verified in the summary**; source them from the pinned upstream instructions and verify locally.
-- Local patch: per-rank NIC/HCA selection and NFS export-root adjustment. These are environment-specific and intentionally not copied; the upstream launcher is the source of the executable implementation.
+- `topology.patch` ships a generic diff against the pinned upstream `start.sh` and `files/nfs-share.sh`: it permits per-rank NIC/HCA overrides and handles an NFS share whose export root is already the model directory. Apply it only if those topology conditions match; configure interface and export values privately. The upstream launcher remains the base implementation.
 - Topology: 4 × GB10, SGLang TP4, EP size 1. Configure switched RoCE and validate each interface. Do not substitute stale interface examples from a different topology.
 - Context/KV: configured 1,000,000 max context; reported KV pool 7,079,168 tokens. Near-1M reliability was not established by the local bench; a previous stack aborted around 590K on head memory.
 
