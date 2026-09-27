@@ -18,7 +18,7 @@ Use the pinned upstream `start-tp4.sh` with its `deploy.env.tp4` copied to a pri
 
 ## Measured evidence
 
-2026-09-25 local bench with clocks capped below the upstream author's run: seven prose single-stream samples, median 82.55 tok/s in round 2; code single-stream 119.9 tok/s. A 262K input took about 66 s TTFT in the two round-2 prefill passes. Local qeval: 72/75. A dashboard collector caused measurable interference at higher concurrency, so round-2 numbers (collector stopped) are preferred. Clock and workload differ from upstream figures.
+2026-09-25 local bench with clocks capped below the upstream author's run: seven prose single-stream samples, median 82.55 tok/s in round 2; code single-stream 119.9 tok/s. Round-2 cold 32K prefill was 5,236.54 and 5,255.04 tok/s (two passes, rounded to 5,237–5,255 in the catalog). A 262K input took about 66 s TTFT in the two round-2 prefill passes. Local qeval: 72/75. A dashboard collector caused measurable interference at higher concurrency, so round-2 numbers (collector stopped) are preferred. Clock and workload differ from upstream figures.
 
 ## Rollback
 
