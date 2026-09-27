@@ -1,0 +1,38 @@
+--- q-orig-envs.py	2026-09-27 10:12:01.256408336 +0000
++++ envs.py	2026-09-27 10:12:00.613399110 +0000
+@@ -271,6 +271,10 @@
+     VLLM_KV_EVENTS_USE_INT_BLOCK_HASHES: bool = True
+     VLLM_OBJECT_STORAGE_SHM_BUFFER_NAME: str = "VLLM_OBJECT_STORAGE_SHM_BUFFER"
+     VLLM_DEEPEP_BUFFER_SIZE_MB: int = 1024
++    VLLM_ENABLE_ROCE_ALLREDUCE: bool = False
++    VLLM_ROCE_ALLREDUCE_MAX_SIZE: str = "2MB"
++    VLLM_ROCE_ALLGATHER_MAX_SIZE: str = "16MB"
++    VLLM_ROCE_ALLGATHER_ENABLE: bool = True
+     VLLM_DEEPEP_HIGH_THROUGHPUT_FORCE_INTRA_NODE: bool = False
+     VLLM_DEEPEP_LOW_LATENCY_USE_MNNVL: bool = False
+     VLLM_DEEPEP_V2_ALLOW_HYBRID_MODE: bool = True
+@@ -1866,6 +1870,24 @@
+     "VLLM_ALLREDUCE_USE_FLASHINFER": lambda: bool(
+         int(os.getenv("VLLM_ALLREDUCE_USE_FLASHINFER", "0"))
+     ),
++    # RoCEnante (b12x.comm.roce) one-shot RoCE all-reduce/all-gather for
++    # multi-node TP on DGX Spark.
++    "VLLM_ENABLE_ROCE_ALLREDUCE": lambda: bool(
++        int(os.getenv("VLLM_ENABLE_ROCE_ALLREDUCE", "0"))
++    ),
++    # Largest all-reduce routed to RoCEnante; larger ones stay on NCCL.
++    "VLLM_ROCE_ALLREDUCE_MAX_SIZE": lambda: os.getenv(
++        "VLLM_ROCE_ALLREDUCE_MAX_SIZE", "2MB"
++    ),
++    # Largest per-rank shard routed to the RoCE all-gather
++    # (e.g. logits [rows, vocab/tp]).
++    "VLLM_ROCE_ALLGATHER_MAX_SIZE": lambda: os.getenv(
++        "VLLM_ROCE_ALLGATHER_MAX_SIZE", "16MB"
++    ),
++    # Local addition: 0 keeps all-gathers on NCCL while all-reduces use RoCE.
++    "VLLM_ROCE_ALLGATHER_ENABLE": lambda: bool(
++        int(os.getenv("VLLM_ROCE_ALLGATHER_ENABLE", "1"))
++    ),
+     # Experimental: use this to enable MCP tool calling for non harmony models
+     "VLLM_USE_EXPERIMENTAL_PARSER_CONTEXT": lambda: bool(
+         int(os.getenv("VLLM_USE_EXPERIMENTAL_PARSER_CONTEXT", "0"))

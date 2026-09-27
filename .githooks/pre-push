@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+set -euo pipefail
+repo=$(git rev-parse --show-toplevel)
+python3 "$repo/scripts/scrub.py" --history

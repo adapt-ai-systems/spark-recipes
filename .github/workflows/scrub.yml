@@ -1,0 +1,23 @@
+name: public-scrub
+on: [push, pull_request]
+jobs:
+  scrub:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install private deny-list from repository secret
+        env:
+          PRIVATE_DENYLIST: ${{ secrets.SPARK_RECIPES_DENYLIST }}
+        run: |
+          test -n "$PRIVATE_DENYLIST" || { echo 'private deny-list secret missing'; exit 2; }
+          printf '%s\n' "$PRIVATE_DENYLIST" > "$RUNNER_TEMP/denylist.txt"
+          chmod 600 "$RUNNER_TEMP/denylist.txt"
+          echo "SPARK_RECIPES_DENYLIST_FILE=$RUNNER_TEMP/denylist.txt" >> "$GITHUB_ENV"
+      - run: python3 -m unittest discover -s scripts -p 'test_*.py' -v
+      - run: python3 scripts/scrub.py --history
+      - run: bash -n glm/*/launch.sh deepseek/*/launch.sh qwen/*/launch.sh .githooks/pre-push

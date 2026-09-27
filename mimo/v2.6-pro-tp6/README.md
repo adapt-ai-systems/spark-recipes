@@ -1,0 +1,5 @@
+# MiMo V2.6 Pro — SGLang TP6
+
+**Status:** retired from tuning on instruction, not a promoted resident. Source: [XiaomiMiMo/MiMo-V2.6-Pro-RL](https://huggingface.co/XiaomiMiMo/MiMo-V2.6-Pro-RL) revision `54b10491b1811c76aa9681a9d0ff872396a4064c`; verified manifest 155 files, 573,492,067,324 bytes. Six Spark TP6, six-way padded 144/18 layout, FP4 experts, chunk 16,384, FA4, decode graphs only, no speculation. SGLang image digest `sha256:381b27ffa19bfbade2bf69bb103395e59a7e82ab0adf176b15b492e9df5aaf7b`; required TP6 padding runtime patch is not published here.
+
+Five-repeat screen after chunk tuning: 9.4K cold TTFT 5.557 s median (from 6.412 s baseline), cached TTFT ~0.203 s, decode ~12 tok/s. Two-stream aggregate 21.5 tok/s. MTP draft graph path and Triton attention failed with this padded layout; do not enable them on this recipe. 131K depth/production quality were not established in the cited campaign. Rollback: stop all six candidate ranks and restore the saved prior tenant; no public launcher is offered for a retired profile.

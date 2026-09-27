@@ -1,0 +1,3 @@
+# Single-GPU alternates — outside Spark scope
+
+The earlier serving inventory also listed a separate desktop GPU with Hemmingway-1 GGUF Q6_K, Qwen3.8 27B EXL3 5.0bpw H6, Bonsai 2 27B ternary PQ2_0, and a BGE embedding support service. These are **not DGX Spark recipes**. They are mutually exclusive serving alternates except the support service. Their local launchers, weight revisions, image/build pins, and current status have not been revalidated for this repository. They are recorded in the migration register so they are not mistaken for missing Spark recipes; runnable claims are intentionally withheld.

@@ -1,0 +1,41 @@
+diff --git a/files/nfs-share.sh b/files/nfs-share.sh
+index 3422f86..85a1454 100644
+--- a/files/nfs-share.sh
++++ b/files/nfs-share.sh
+@@ -133,7 +133,8 @@ nfs_ensure_server() {
+ # When reusing existing share helper (HF cache as NFSv4 root), publish the checkpoint
+ # into that tree with hardlinks (same ext4, zero extra bytes).
+ nfs_publish_model() {
+-  if [[ "${NFS_REUSE_EXPORT:-0}" != "1" ]]; then
++  # Local patch: our live existing share helper container exports MODEL_DIR itself at /.
++  if [[ "${NFS_REUSE_EXPORT:-0}" != "1" || "${NFS_EXPORT_IS_MODEL_DIR:-0}" == "1" ]]; then
+     NFS_DEVICE=":/"
+     return 0
+   fi
+diff --git a/start.sh b/start.sh
+index f568032..4c7383f 100755
+--- a/start.sh
++++ b/start.sh
+@@ -385,6 +385,14 @@ push_spec_tables() {
+
+ worker_env_lines() {
+   local wip="$1" wgid="$2" rank="$3"
++  # Local patch: this fabric names the up ports differently per rank
++  # (ranks 0/1 port 1, ranks 2/3 port 0), so allow per-rank overrides.
++  local hca_key="WORKER${rank}_IB_HCA" nic_key="WORKER${rank}_SOCKET_IFNAME" roce_key="WORKER${rank}_B12X_ROCE_HCA"
++  local IB_HCA="${!hca_key:-$IB_HCA}"
++  local NCCL_SOCKET_IFNAME="${!nic_key:-$NCCL_SOCKET_IFNAME}"
++  local GLOO_SOCKET_IFNAME="${!nic_key:-$GLOO_SOCKET_IFNAME}"
++  local _roce_override=""
++  [[ -n "${!roce_key:-}" ]] && _roce_override=" -e B12X_ROCE_HCA=${!roce_key}"
+   # Mirror of the head's EXTRA_CONTAINER_ENV passthrough; every rank must agree.
+   local _extra_env="-e DSV41_EXTRA_ENV=1" _kv
+   for _kv in ${EXTRA_CONTAINER_ENV:-}; do _extra_env+=" -e $(printf '%q' "$_kv")"; done
+@@ -445,7 +453,7 @@ worker_env_lines() {
+         -e SGLANG_ENABLE_DSV41_ENGRAM_HOST_TABLE=0 \\
+         -e DSV41_TP_PAD=${DSV41_TP_PAD:-1} \\
+         -e HOST_IP=$wip -e VLLM_HOST_IP=$wip \\
+-        $_extra_env$_ring_env \\
++        $_extra_env$_ring_env$_roce_override \\
+ EOF
+ }
