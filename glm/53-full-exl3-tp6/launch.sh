@@ -16,7 +16,7 @@ cmd=(docker run -d --name glm53-full-tp6 --network host --ipc host --gpus all
   -e VLLM_MARLIN_USE_ATOMIC_ADD=1 "$IMAGE" vllm serve /model
   --served-model-name glm-5.3 --tensor-parallel-size 6 --nnodes 6 --node-rank "$RANK"
   --master-addr "$HEAD_IP" --max-model-len 360000 --max-num-seqs 4
-  --speculative-config '{"num_speculative_tokens":2}'
-  --compilation-config '{"cudagraph_mode":"FULL","cudagraph_capture_sizes":[3,6,9,12]}')
+  --speculative-config '{"num_speculative_tokens":4}'
+  --compilation-config '{"cudagraph_mode":"FULL","cudagraph_capture_sizes":[5,10,15,20]}')
 printf '%q ' "${cmd[@]}"; echo
 [ "${DRY_RUN:-1}" = 1 ] || { echo 'Template cannot reproduce unpublished mounts; refusing execution' >&2; exit 2; }
